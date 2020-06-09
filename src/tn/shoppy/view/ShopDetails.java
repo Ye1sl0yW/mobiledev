@@ -62,6 +62,12 @@ public class ShopDetails extends SideMenuBaseForm {
         enclosure.setSize(calcScrollSize());
         add(BorderLayout.CENTER, enclosure);
 
+Button noteButton = new Button("Noter");
+        noteButton.addPointerPressedListener((evt) -> {
+            new NoteForm(shop,this,res).show();
+        });
+
+        enclosure.add(noteButton);
         ProductService productService = ProductService.getInstance();
         ArrayList<Product> listP = productService.getAllProductsByShop(shop.getId());
         for (Product p : listP) {

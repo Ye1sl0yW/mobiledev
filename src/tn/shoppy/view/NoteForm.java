@@ -25,6 +25,7 @@ import com.codename1.ui.util.Resources;
 import java.io.OutputStream;
 import tn.shoppy.model.Note;
 import tn.shoppy.model.Product;
+import tn.shoppy.model.Shop;
 import tn.shoppy.services.PointsService;
 import tn.shoppy.utils.SideMenuBaseForm;
 import tn.shoppy.utils.Statics;
@@ -80,6 +81,7 @@ public class NoteForm extends SideMenuBaseForm {
                 n.setText(comField.getText());
                 n.setValue((int) Double.parseDouble(noteField.getText()));
                 n.setProduit_id(p.getId());
+                n.setMagasin_id(p.getId_magasin());
                 n.setUser_id(1);
                 n.setType(0);
 
@@ -91,7 +93,59 @@ public class NoteForm extends SideMenuBaseForm {
         enclosure.addAll(formContainer, addButton);
         this.addAll(enclosure);
     }
+public NoteForm(Shop p, Form previous, Resources res) {
+        super("Détails produit", new BoxLayout(BoxLayout.Y_AXIS));
+        this.res = res;
+        setTitle("Noter un magasin");
+        Toolbar tb = this.getToolbar();
+        tb.addCommandToRightBar("Back", null, (evt) -> {
+            previous.show();
+        });
 
+        final String[] imageName = {""};
+        final String[] pathToBeStored = {""};
+        imageName[0] = "dafault.png";
+
+        Container enclosure = new Container(new BoxLayout(BoxLayout.Y_AXIS));
+        Container iconContainer = new Container(new BoxLayout(BoxLayout.X_AXIS));
+        Container formContainer = new Container(new BoxLayout(BoxLayout.Y_AXIS));
+
+        Label com = new Label("Commentaire:");
+        TextField comField = new TextField("", "Commentaire");
+
+        Label note = new Label("Note:");
+        TextField noteField = new TextField("", "Note");
+
+        
+
+        formContainer.addComponent(note);
+        formContainer.addComponent(noteField);
+
+        formContainer.addComponent(com);
+        formContainer.addComponent(comField);
+
+       
+
+        Button addButton = new Button("Envoyer");
+        addButton.addActionListener(ev -> {
+            System.out.println("WIP : controles de saisie dans le service");
+
+            if (inputControl(comField.getText())) {
+                Note n = new Note();
+                n.setText(comField.getText());
+                n.setValue((int) Double.parseDouble(noteField.getText()));
+                n.setMagasin_id(p.getId());
+                n.setUser_id(1);
+                n.setType(1);
+
+                PointsService.getInstance().addNoteProduit(n);
+            }
+
+        });
+
+        enclosure.addAll(formContainer, addButton);
+        this.addAll(enclosure);
+    }
     public boolean inputControl(String text) {
 
         if (text.length() == 0) {
