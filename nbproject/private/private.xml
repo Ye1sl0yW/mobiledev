@@ -3,6 +3,19 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/Users/os/Documents/mobiledev/src/tn/shoppy/utils/Statics.java</file>
+            <file>file:/C:/Users/os/Documents/mobiledev/src/tn/shoppy/view/HomePage.java</file>
+            <file>file:/C:/Users/os/Documents/mobiledev/src/tn/shoppy/view/ProductsList.java</file>
+            <file>file:/C:/Users/os/Documents/mobiledev/src/tn/shoppy/view/AddProductForm.java</file>
+            <file>file:/C:/Users/os/Documents/mobiledev/src/tn/shoppy/view/SellerForm.java</file>
+            <file>file:/C:/Users/os/Documents/mobiledev/src/tn/shoppy/services/PointsService.java</file>
+            <file>file:/C:/Users/os/Documents/mobiledev/src/tn/shoppy/view/PointsForm.java</file>
+            <file>file:/C:/Users/os/Documents/mobiledev/src/tn/shoppy/model/Product.java</file>
+            <file>file:/C:/Users/os/Documents/mobiledev/src/tn/shoppy/services/ProductService.java</file>
+            <file>file:/C:/Users/os/Documents/mobiledev/src/tn/shoppy/services/ShopService.java</file>
+            <file>file:/C:/Users/os/Documents/mobiledev/src/tn/shoppy/MyApplication.java</file>
+            <file>file:/C:/Users/os/Documents/mobiledev/src/tn/shoppy/model/Note.java</file>
+        </group>
     </open-files>
 </project-private>

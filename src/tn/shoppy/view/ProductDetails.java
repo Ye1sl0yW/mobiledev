@@ -112,8 +112,11 @@ public class ProductDetails extends SideMenuBaseForm{
         
         
         Button buyButton = new Button("Ajouter au panier");
-
-        enclosure.addAll(imageContainer,textContainer,buyButton,iconContainer);
+        Button noteButton = new Button("Noter");
+        noteButton.addPointerPressedListener((evt) -> {
+            new NoteForm(product,this,res).show();
+        });
+        enclosure.addAll(imageContainer,textContainer,buyButton,noteButton,iconContainer);
         this.addAll(enclosure);
     }
     

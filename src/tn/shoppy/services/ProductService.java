@@ -147,7 +147,7 @@ public class ProductService {
                 double prix = Double.parseDouble(obj.get("prix").toString());
                 p.setPrix(prix);
                 p.setMarque(obj.get("marque").toString());
-                p.setImage(obj.get("imageName").toString());
+            //    p.setImage(obj.get("imageName").toString());
 
                 //    p.setImageProduct(obj.get("image").toString());
                 products.add(p);
