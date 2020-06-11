@@ -44,11 +44,11 @@ public class OrderDetails extends SideMenuBaseForm {
             previous.show();
         });
         
-        String pattern = "yyyy-MM-dd";
-SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-
-String datee = simpleDateFormat.format(new Date());
-System.out.println(datee);
+//        String pattern = "yyyy-MM-dd";
+//SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+//
+//String datee = simpleDateFormat.format(new Date());
+//System.out.println(datee);
 
 
 
@@ -60,10 +60,10 @@ System.out.println(datee);
 
 
          Label date = new Label("Date : " + order.getDateCreation());
-        System.out.println("Date : " + order.getDateCreation());
+      //  System.out.println("Date : " + order.getDateCreation());
          //Label date = new Label("Date : " + simpleDateFormat.format(order.getDateCreation()));
      
-        Label address = new Label("Adresse de livraison" + order.getAdresseLiv());
+        Label address = new Label("Adresse de livraison : " + order.getAdresseLiv());
         Label total = new Label("Total : " + Float.toString(order.getTotal()) + " TND.");    
 
         Container enclosure = new Container(new BoxLayout(BoxLayout.Y_AXIS));

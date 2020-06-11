@@ -22,6 +22,7 @@ import tn.shoppy.model.OrderLine;
 import tn.shoppy.model.Product;
 import tn.shoppy.utils.Statics;
 import java.util.Date;
+import java.util.NavigableMap;
 
 /**
  *
@@ -33,6 +34,7 @@ public class OrderService {
     private final ConnectionRequest cn;
 
     private Map result = new HashMap<>();
+     
     private ArrayList<Order> orders;
     private ArrayList<OrderLine> orderLines;
 
@@ -74,7 +76,7 @@ public class OrderService {
                 float da = Float.parseFloat(dated.get("timestamp").toString());
                 Date dCeation = new Date((long) (da - 3600) * 1000);
 
-                String pattern = "yyyy-MM-dd";
+                String pattern = "yyyy-mm-dd HH:mm:ss";
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
                 String datee = simpleDateFormat.format(dCeation);
@@ -179,7 +181,10 @@ public class OrderService {
         try {
             Product p = new Product();
             JSONParser parser = new JSONParser();
-            Map<String, Object> productMapJson = parser.parseJSON(new CharArrayReader(jsonText.toCharArray()));
+           try {
+     Map<String, Object> productMapJson = parser.parseJSON(new CharArrayReader(jsonText.toCharArray()));
+
+          //Map<String, Object> productMapJson = parser.parseJSON(new CharArrayReader(jsonText.toCharArray()));
             System.out.println(productMapJson);
             //  p.setId((int) Double.parseDouble(productMapJson.get("id").toString()));
             //  p.setNom(productMapJson.get("nom").toString());
@@ -188,7 +193,10 @@ public class OrderService {
             //  double prix = Double.parseDouble(productMapJson.get("prix").toString());
             //  p.setPrix(prix);
             //   p.setMarque(productMapJson.get("marque").toString());
-
+}
+catch(ArrayIndexOutOfBoundsException exception) {
+     System.out.println(exception);
+}
             //  return p;
         } catch (IOException ex) {
             System.out.println(ex);

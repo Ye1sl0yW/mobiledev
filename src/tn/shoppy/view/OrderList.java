@@ -114,7 +114,7 @@ public class OrderList extends SideMenuBaseForm {
         card.getStyle().setMargin(TOP, 230);
 
         Label date = new Label("Date : " +order.getDateCreation());
-        Label address = new Label("Adresse de livraison" + order.getAdresseLiv());
+        Label address = new Label("Adresse de livraison : " + order.getAdresseLiv());
         Label total = new Label("Total : " + Float.toString(order.getTotal()) + " TND.");
 
         textContainer.addAll(date, address, total);
