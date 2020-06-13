@@ -9,6 +9,8 @@ import com.codename1.capture.Capture;
 import com.codename1.io.File;
 import com.codename1.io.FileSystemStorage;
 import com.codename1.ui.Button;
+import com.codename1.io.ConnectionRequest;
+import com.codename1.io.NetworkManager;
 
 import com.codename1.ui.Container;
 import com.codename1.ui.Dialog;
@@ -18,15 +20,18 @@ import com.codename1.ui.Image;
 import com.codename1.ui.Label;
 import com.codename1.ui.TextField;
 import com.codename1.ui.Toolbar;
-
+import com.codename1.components.ImageViewer;
+import com.codename1.ui.EncodedImage;
+import java.util.ArrayList;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.util.ImageIO;
 import com.codename1.ui.util.Resources;
 import java.io.OutputStream;
-import tn.shoppy.model.Note;
+import tn.shoppy.model.Ticket;
 import tn.shoppy.services.PointsService;
 import tn.shoppy.utils.SideMenuBaseForm;
 import tn.shoppy.utils.Statics;
+import com.codename1.ui.layouts.FlowLayout;
 
 /**
  *
@@ -35,14 +40,14 @@ import tn.shoppy.utils.Statics;
 public class PointsForm extends SideMenuBaseForm {
 
     private Resources res;
-
-    public PointsForm(Form previous, Resources res) {
-        super("Détails produit", new BoxLayout(BoxLayout.Y_AXIS));
+    private String recap="";
+    public PointsForm( Resources res) {
+        super("affichage points", new BoxLayout(BoxLayout.Y_AXIS));
         this.res = res;
-        setTitle("Noter un produit");
+        setTitle("Votre portfolio");
         Toolbar tb = this.getToolbar();
         tb.addCommandToRightBar("Back", null, (evt) -> {
-            previous.show();
+            new HomePage(res).show();
         });
 
         final String[] imageName = {""};
@@ -53,51 +58,46 @@ public class PointsForm extends SideMenuBaseForm {
         Container iconContainer = new Container(new BoxLayout(BoxLayout.X_AXIS));
         Container formContainer = new Container(new BoxLayout(BoxLayout.Y_AXIS));
 
-        Label com = new Label("Commentaire:");
-        TextField comField = new TextField("", "Commentaire");
+        Label total = new Label();
+        total.setText("Total des points : " + PointsService.getInstance().afficherPoints()  );
 
-        Label note = new Label("Note:");
-        TextField noteField = new TextField("", "Note");
 
         
+        
+        formContainer.addComponent(total);
 
-        formContainer.addComponent(note);
-        formContainer.addComponent(noteField);
+        enclosure.addAll(formContainer);
+ enclosure.setScrollableY(true);
+        enclosure.setSize(calcScrollSize());
+ArrayList<Ticket> tickets = PointsService.getInstance().getMyTickets();
+        int count=0;
+        for (Ticket t : tickets)
+        {   count++;
+            displayTickets(t, enclosure);
+            recap+="Ticket n°"+count+" Montant: " + t.getMontant() + " expire le " + t.getDate() + "\n";
+        }
 
-        formContainer.addComponent(com);
-        formContainer.addComponent(comField);
+        Button recapSMS = new Button("Envoyer recap par SMS");
+        recapSMS.addActionListener(ev->{
+        ConnectionRequest c = new ConnectionRequest();
+        c.setUrl("https://rest.nexmo.com/sms/json");
+        c.setPost(true);
+        c.addArgument("from","Shoppy-mobile"); 
+        c.addArgument("text",recap); 
+        c.addArgument("to",NUMERO); 
+        c.addArgument("api_key",API_KEY); 
+        c.addArgument("api_secret",API_SECRET); 
+        NetworkManager.getInstance().addToQueueAndWait(c);
+        }
+
+
+
+        );
+        enclosure.add(recapSMS);
+        this.addAll(enclosure);
 
        
-
-        Button addButton = new Button("Envoyer");
-        addButton.addActionListener(ev -> {
-            System.out.println("WIP : controles de saisie dans le service");
-
-            if (inputControl(comField.getText())) {
-                Note n = new Note();
-                n.setText(comField.getText());
-                n.setValue((int) Double.parseDouble(noteField.getText()));
-                n.setProduit_id(1);
-                n.setUser_id(1);
-                n.setType(0);
-
-                PointsService.getInstance().addNoteProduit(n);
-            }
-
-        });
-
-        enclosure.addAll(formContainer, addButton);
-        this.addAll(enclosure);
-    }
-
-    public boolean inputControl(String text) {
-
-        if (text.length() == 0) {
-            Dialog.show("Champ Vide", "Le nom est obligatoire ", "Ok", null);
-            return false;
-        }
-        return true;
-    }
+}
 
     
     
@@ -124,5 +124,28 @@ public class PointsForm extends SideMenuBaseForm {
     @Override
     protected void showSellerForm(Resources res) {
         // new SellerForm(res).show();
+    }
+
+
+public void displayTickets(Ticket t, Container enclosure) {
+        EncodedImage placeholder = EncodedImage.createFromImage(res.getImage("ticket.jpg").scaled(300, 150),true);
+        ImageViewer ticketImage = new ImageViewer(placeholder);
+
+        
+        Container card = new Container(new FlowLayout());
+        Container imageContainer = new Container(new BoxLayout(BoxLayout.Y_AXIS));
+        Container textContainer = new Container(new BoxLayout(BoxLayout.Y_AXIS));
+        card.getStyle().setMargin(TOP, 230);
+
+        Label montant_mg = new Label(String.valueOf(t.getMontant()));
+        Label date_mg = new Label("A utiliser avant : " + t.getDate());
+
+        textContainer.addAll(montant_mg,date_mg);
+        imageContainer.add(ticketImage);
+        card.addAll(imageContainer, textContainer);
+        enclosure.add(card);
+        
+        
+
     }
 }

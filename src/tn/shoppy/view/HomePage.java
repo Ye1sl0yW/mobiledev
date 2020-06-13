@@ -149,7 +149,7 @@ public class HomePage extends SideMenuBaseForm {
 
     @Override
     protected void showOtherForm(Resources res) {
-        //    new AddProject(res).show();
+            new PointsForm(res).show();
     }
 
     @Override

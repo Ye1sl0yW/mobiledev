@@ -139,11 +139,21 @@ public NoteForm(Shop p, Form previous, Resources res) {
                 n.setType(1);
 
                 PointsService.getInstance().addNoteProduit(n);
+                //PointsService.getInstance().afficherPoints();
+
             }
 
         });
+ Button testButton = new Button("TEST");
+        addButton.addActionListener(ev -> {
 
-        enclosure.addAll(formContainer, addButton);
+            
+
+                PointsService.getInstance().afficherPoints();
+            
+
+        });
+        enclosure.addAll(formContainer, addButton,testButton);
         this.addAll(enclosure);
     }
     public boolean inputControl(String text) {
