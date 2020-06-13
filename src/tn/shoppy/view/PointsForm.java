@@ -85,8 +85,8 @@ ArrayList<Ticket> tickets = PointsService.getInstance().getMyTickets();
         c.addArgument("from","Shoppy-mobile"); 
         c.addArgument("text",recap); 
         c.addArgument("to",NUMERO); 
-        c.addArgument("api_key",API_KEY); 
-        c.addArgument("api_secret",API_SECRET); 
+        c.addArgument("api_key",KEY); 
+        c.addArgument("api_secret",SECRET); 
         NetworkManager.getInstance().addToQueueAndWait(c);
         }
 

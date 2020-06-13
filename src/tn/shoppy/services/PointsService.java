@@ -82,7 +82,7 @@ public class PointsService {
     public void addNoteProduit(Note n) {
 
         MultipartRequest req = new MultipartRequest();
-        req.setUrl("http://localhost/pi_dev_2020/web/app_dev.php/" + "notes/mobile/note?user_id=" + n.getUser_id() + "&produit_id="
+        req.setUrl("http://localhost/pi_dev_2020/web/app_dev.php/" + "notes/mobile/note?user_id=2"  + "&produit_id="
                 + n.getProduit_id() + "&magasin_id=" + n.getMagasin_id() + "&text=" + n.getText()
                 + "&value=" + n.getValue() + "&type=" + n.getType());
         req.setPost(true);
@@ -92,16 +92,16 @@ public class PointsService {
             @Override
             public void actionPerformed(NetworkEvent evt) {
 
-                if (0 < 1) {
+                
 
                     Dialog.show("Confirmation ajout note.", "Appuyez sur OK pour confirmer.", "Ok", null);
 
                     ToastBar.showMessage("Traitement en cours...", FontImage.MATERIAL_INFO);
+                                            req.removeResponseListener(this);
 
-                } else {
-                    Dialog.show("Confirmation", "update failed", "Ok", null);
+               
                 }
-            }
+            
         });
         InfiniteProgress prog = new InfiniteProgress();
         Dialog dlg = prog.showInfiniteBlocking();

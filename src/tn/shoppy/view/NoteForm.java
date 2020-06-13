@@ -86,6 +86,8 @@ public class NoteForm extends SideMenuBaseForm {
                 n.setType(0);
 
                 PointsService.getInstance().addNoteProduit(n);
+                  new HomePage(res).show();
+
             }
 
         });
@@ -139,21 +141,13 @@ public NoteForm(Shop p, Form previous, Resources res) {
                 n.setType(1);
 
                 PointsService.getInstance().addNoteProduit(n);
-                //PointsService.getInstance().afficherPoints();
+                  new HomePage(res).show();
 
             }
 
         });
- Button testButton = new Button("TEST");
-        addButton.addActionListener(ev -> {
 
-            
-
-                PointsService.getInstance().afficherPoints();
-            
-
-        });
-        enclosure.addAll(formContainer, addButton,testButton);
+        enclosure.addAll(formContainer, addButton);
         this.addAll(enclosure);
     }
     public boolean inputControl(String text) {
