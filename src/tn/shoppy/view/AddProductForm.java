@@ -47,7 +47,7 @@ public class AddProductForm extends SideMenuBaseForm {
 
         final String[] imageName = {""};
         final String[] pathToBeStored = {""};
-        imageName[0] = "dafault.png";
+        imageName[0] = "default.png";
 
         Container enclosure = new Container(new BoxLayout(BoxLayout.Y_AXIS));
         Container iconContainer = new Container(new BoxLayout(BoxLayout.X_AXIS));
@@ -108,7 +108,6 @@ public class AddProductForm extends SideMenuBaseForm {
 
         Button addButton = new Button("Envoyer");
         addButton.addActionListener(ev -> {
-            System.out.println("WIP : controles de saisie dans le service");
 
             if (inputControl(nameField.getText(), marqueField.getText(), prixField.getText(), quantiteField.getText())) {
                 Product p = new Product();
@@ -182,4 +181,8 @@ public class AddProductForm extends SideMenuBaseForm {
         new OrderList(res).show();
     }
 
+    @Override
+    protected void showCart(Resources res){
+        new CartPage(res).show();
+    }
 }

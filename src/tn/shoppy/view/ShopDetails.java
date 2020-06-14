@@ -144,4 +144,8 @@ public class ShopDetails extends SideMenuBaseForm {
     protected void showOrderList(Resources res){
         new OrderList(res).show();
     }
+    @Override
+    protected void showCart(Resources res) {
+        new CartPage(res).show();
+    }
 }

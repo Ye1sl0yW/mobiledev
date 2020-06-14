@@ -103,20 +103,12 @@ public class SellerForm extends SideMenuBaseForm {
         enclosure.add(BorderLayout.NORTH, buttonContainer);
 
         addProductButton.addActionListener(ev -> {
-            new PdfForm(this, res).show();
+            new AddProductForm(this, res).show();
         });
 
         setupSideMenu(res);
     }
 
-    private Image colorCircle(int color) {
-        int size = Display.getInstance().convertToPixels(3);
-        Image i = Image.createImage(size, size, 0);
-        Graphics g = i.getGraphics();
-        g.setColor(color);
-        g.fillArc(0, 0, size, size, 0, 360);
-        return i;
-    }
 
     @Override
     protected void showOtherForm(Resources res) {
@@ -146,6 +138,10 @@ public class SellerForm extends SideMenuBaseForm {
     @Override
     protected void showOrderList(Resources res){
         new OrderList(res).show();
+    }
+    @Override
+    protected void showCart(Resources res) {
+        new CartPage(res).show();
     }
 }
 

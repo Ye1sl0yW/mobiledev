@@ -23,6 +23,8 @@ import tn.shoppy.model.Product;
 import tn.shoppy.utils.Statics;
 import java.util.Date;
 import java.util.NavigableMap;
+import tn.shoppy.model.Cart;
+import tn.shoppy.view.CartPage;
 
 /**
  *
@@ -34,10 +36,11 @@ public class OrderService {
     private final ConnectionRequest cn;
 
     private Map result = new HashMap<>();
-     
+
     private ArrayList<Order> orders;
     private ArrayList<OrderLine> orderLines;
-
+    private int newOrderID = 0;
+    
     public boolean DeleteOrder() {
         System.out.println("tn.shoppy.services.OrderService.DeleteOrder()");
         return true;
@@ -76,11 +79,10 @@ public class OrderService {
                 float da = Float.parseFloat(dated.get("timestamp").toString());
                 Date dCeation = new Date((long) (da - 3600) * 1000);
 
-                String pattern = "yyyy-mm-dd HH:mm:ss";
+                String pattern = "yyyy-MM-dd HH:mm:ss";
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
                 String datee = simpleDateFormat.format(dCeation);
-                
 
                 o.setDateCreation(datee);
                 float total = (float) Double.parseDouble(obj.get("total").toString());
@@ -160,7 +162,7 @@ public class OrderService {
 
                 //System.out.println(obj.get("idProduit").toString());
                 //Product p = new Product();
-                Product p = parseOneProduct(obj.get("idProduit").toString());
+                //Product p = parseOneProduct(obj.get("idProduit").toString());
                 // ol.setId_product(p.getId());
 
                 ol.setQte((int) Double.parseDouble(obj.get("qte").toString()));
@@ -181,25 +183,24 @@ public class OrderService {
         try {
             Product p = new Product();
             JSONParser parser = new JSONParser();
-           try {
-     Map<String, Object> productMapJson = parser.parseJSON(new CharArrayReader(jsonText.toCharArray()));
+            try {
+                Map<String, Object> productMapJson = parser.parseJSON(new CharArrayReader(jsonText.toCharArray()));
 
-          //Map<String, Object> productMapJson = parser.parseJSON(new CharArrayReader(jsonText.toCharArray()));
-            System.out.println(productMapJson);
-            //  p.setId((int) Double.parseDouble(productMapJson.get("id").toString()));
-            //  p.setNom(productMapJson.get("nom").toString());
-            //  p.setQuantite((int) Double.parseDouble(productMapJson.get("quantite").toString()));
-            //  p.setDescription(productMapJson.get("description").toString());
-            //  double prix = Double.parseDouble(productMapJson.get("prix").toString());
-            //  p.setPrix(prix);
-            //   p.setMarque(productMapJson.get("marque").toString());
-}
-catch(ArrayIndexOutOfBoundsException exception) {
-     System.out.println(exception);
-}
+                //Map<String, Object> productMapJson = parser.parseJSON(new CharArrayReader(jsonText.toCharArray()));
+                System.out.println(productMapJson);
+                //  p.setId((int) Double.parseDouble(productMapJson.get("id").toString()));
+                //  p.setNom(productMapJson.get("nom").toString());
+                //  p.setQuantite((int) Double.parseDouble(productMapJson.get("quantite").toString()));
+                //  p.setDescription(productMapJson.get("description").toString());
+                //  double prix = Double.parseDouble(productMapJson.get("prix").toString());
+                //  p.setPrix(prix);
+                //   p.setMarque(productMapJson.get("marque").toString());
+            } catch (ArrayIndexOutOfBoundsException exception) {
+                //  System.out.println(exception);
+            }
             //  return p;
         } catch (IOException ex) {
-            System.out.println(ex);
+            //    System.out.println(ex);
 
         }
         return new Product();
@@ -233,4 +234,72 @@ catch(ArrayIndexOutOfBoundsException exception) {
         NetworkManager.getInstance().addToQueueAndWait(req);
 
     }
+
+    public void addOrder(String address) {
+        
+        Order o = new Order();
+        o.setId_Acheteur(Statics.BUYER_ID);
+        o.setAdresseLiv(address);        
+        o.setDateCreation("");
+        o.setQteTot(CartService.getInstance().getCartQuantity());
+        o.setTotal((float)CartService.getInstance().getCartTotal());
+        
+        MultipartRequest req = new MultipartRequest();
+        req.setUrl(Statics.CART_URL + "mobile/addOrder"
+                + "?user=" + o.getId_Acheteur()+ "&adr="
+                + o.getAdresseLiv() + "&qte=" + o.getQteTot()+ "&total=" + o.getTotal());
+        req.setPost(true);
+        //req.addArgument(address, address);
+        req.addResponseListener(new ActionListener<NetworkEvent>() {
+
+            @Override
+            public void actionPerformed(NetworkEvent evt) {
+                if (0 < 1) {
+                    Dialog.show("Confirmation création de commande.", "Appuyez sur OK pour confirmer.", "OK", null);
+                    ToastBar.showMessage("Traitement en cours...", FontImage.MATERIAL_INFO);
+                    String orderIdJson = new String(req.getResponseData());
+                    newOrderID = parseOrderId(orderIdJson);
+                    
+                    req.removeResponseListener(this);
+                } else {
+                    Dialog.show("Confirmation", "update failed", "Ok", null);
+                }
+            }
+        });
+        InfiniteProgress prog = new InfiniteProgress();
+        Dialog dlg = prog.showInfiniteBlocking();
+        req.setDisposeOnCompletion(dlg);
+        NetworkManager.getInstance().addToQueueAndWait(req);
+        
+        addAllOrderLinesForOneOrder(newOrderID);       
+    }
+
+    public int parseOrderId(String jsonText) {
+        int[] orderId = {0};
+        try {            
+            JSONParser parser = new JSONParser();
+            Map<String, Object> idMapJson = parser.parseJSON(new CharArrayReader(jsonText.toCharArray()));
+            List<Map<String, Object>> list = (List<Map<String, Object>>) idMapJson.get("root");
+            Map<String, Object> list_s = list.get(0);
+            
+            orderId[0] = (int) Double.parseDouble(list_s.get("id").toString());            
+        } catch (IOException ex) {
+            System.out.println(ex);
+
+        }
+        return orderId[0];
+    }
+
+    private void addAllOrderLinesForOneOrder(int orderID) {
+        for (Product p : Cart.cart.keySet()){
+            int productID = p.getId();
+            int quantite = Cart.cart.get(p);
+            float total = (float)(quantite * p.getPrix());
+            OrderLineService.getInstance().addOrderline(orderID, productID, quantite, total);            
+        }
+         CartService.getInstance().emptyCart();
+    }
+
+    
+    
 }

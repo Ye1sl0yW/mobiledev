@@ -67,6 +67,7 @@ public abstract class SideMenuBaseForm extends Form {
         getToolbar().addMaterialCommandToSideMenu("  Magasins", FontImage.MATERIAL_ACCESS_TIME, e -> showShops(res));
         getToolbar().addMaterialCommandToSideMenu("  Vendeur", FontImage.MATERIAL_TRENDING_UP, e -> showSellerForm(res));
         getToolbar().addMaterialCommandToSideMenu("  Commandes", FontImage.MATERIAL_VIEW_LIST, e -> showOrderList(res));
+        getToolbar().addMaterialCommandToSideMenu("  Panier", FontImage.MATERIAL_MONEY, e -> showCart(res));
         getToolbar().addMaterialCommandToSideMenu("  WIP", FontImage.MATERIAL_GROUP, e -> showOtherForm(res));
         getToolbar().addMaterialCommandToSideMenu("  WIP", FontImage.MATERIAL_SETTINGS, e -> showOtherForm(res));
     }
@@ -82,5 +83,7 @@ public abstract class SideMenuBaseForm extends Form {
     protected abstract void showSellerForm(Resources res);
         
     protected abstract void showOrderList(Resources res);
+    
+    protected abstract void showCart(Resources res);
 
 }

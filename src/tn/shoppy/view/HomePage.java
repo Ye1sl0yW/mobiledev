@@ -90,12 +90,12 @@ public class HomePage extends SideMenuBaseForm {
 
         ProductService productService = ProductService.getInstance();
         ArrayList<Product> listP = productService.getRecentProducts();
-        for (Product p : listP) {     
+        for (Product p : listP) {
             this.displayProduct(p, enclosure);
         }
         enclosure.addPullToRefresh(() -> {
             enclosure.removeAll();
-            for (Product p : productService.getRecentProducts()) {               
+            for (Product p : productService.getRecentProducts()) {
                 this.displayProduct(p, enclosure);
             }
             enclosure.revalidate();
@@ -171,8 +171,14 @@ public class HomePage extends SideMenuBaseForm {
     protected void showSellerForm(Resources res) {
         new SellerForm(res).show();
     }
-        @Override
-    protected void showOrderList(Resources res){
+
+    @Override
+    protected void showOrderList(Resources res) {
         new OrderList(res).show();
+    }
+
+    @Override
+    protected void showCart(Resources res) {
+        new CartPage(res).show();
     }
 }
